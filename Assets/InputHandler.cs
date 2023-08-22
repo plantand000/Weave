@@ -2,17 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHandler : MonoBehaviour
+namespace AP
 {
-    // Start is called before the first frame update
-    void Start()
+    public class InputHandler : MonoBehaviour
     {
-        
-    }
+        public float horizontal;
+        public float vertical;
+        public float moveAmount;
+        public float mouseX;
+        public float mouseY;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PlayerControls inputActions;
+
+        Vector2 movementInput;
+        Vector2 cameraInput;
+
+        public void OnEnable()
+        {
+            // If there is no input actions, then input actions is our new player controls
+            if (inputActions == null)
+            {
+                inputActions = new PlayerControls();
+                inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
+                inputActions.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+            }
+
+            inputActions.Enable();
+        }
+
+        private void OnDisble()
+        {
+            inputActions.Disable();
+        }
+
+        public void TickInput(float delta)
+        {
+            MoveInput(delta);
+        }
+
+        private void MoveInput(float delta)
+        {
+            horizontal = movementInput.x;
+            vertical = movementInput.y;
+            moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
+            mouseX = cameraInput.x;
+            mouseY = cameraInput.y;
+        }
+
     }
 }
