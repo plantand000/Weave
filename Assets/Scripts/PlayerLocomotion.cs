@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AP
 {
-    public class NewBehaviourScript : MonoBehaviour
+    public class PlayerLocomotion : MonoBehaviour
     {
         Transform cameraObject;
         InputHandler inputHandler;
@@ -51,6 +51,8 @@ namespace AP
 
             Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
             rigidbody.velocity = projectedVelocity;
+
+            animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
 
             if (animatorHandler.canRotate)
             {
